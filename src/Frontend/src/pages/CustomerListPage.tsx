@@ -32,8 +32,8 @@ export default function CustomerListPage() {
             Customers
         </Typography>
 
-        <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="customers table">
+        <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
+            <Table sx={{ minWidth: 650 }} aria-label="customers table" stickyHeader>
                 <TableHead>
                     <TableRow>
                         <StyledTableHeadCell>Name</StyledTableHeadCell>
