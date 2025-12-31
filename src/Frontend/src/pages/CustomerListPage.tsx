@@ -1,7 +1,7 @@
 import { Paper, Table, TableContainer, TableHead, TableRow, Typography, styled, TableCell, tableCellClasses, TableBody } from "@mui/material"
 import { useEffect, useState } from "react"
-import CustomersFilterComp from "../components/CustomersFilterComp";
-import { CustomerFilter } from "../components/CustomerFilter";
+import CustomersFilterComp from "../components/CustomersFilterComp/CustomersFilterComp";
+import { CustomerFilter } from "../components/CustomersFilterComp/CustomerFilter";
 
 interface CustomerListQuery{
     id: number,
