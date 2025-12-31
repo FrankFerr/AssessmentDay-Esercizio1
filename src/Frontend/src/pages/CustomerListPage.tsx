@@ -1,5 +1,7 @@
 import { Paper, Table, TableContainer, TableHead, TableRow, Typography, styled, TableCell, tableCellClasses, TableBody } from "@mui/material"
 import { useEffect, useState } from "react"
+import CustomersFilterComp from "../components/CustomersFilterComp";
+import { CustomerFilter } from "../components/CustomerFilter";
 
 interface CustomerListQuery{
     id: number,
@@ -20,17 +22,27 @@ const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
 
 export default function CustomerListPage() {
     const [customerList, setCustomerList] = useState<CustomerListQuery[]>([])
+    const [customerFilter, setCustomerFilter] = useState<CustomerFilter>(new CustomerFilter("", ""))
 
     useEffect(() => {
-        fetch("/api/customers/list")
+        let url = "/api/customers/list"
+        url = customerFilter.ApplyFilter(url)
+
+        fetch(url)
         .then((response) => response.json())
         .then((data) => setCustomerList(data as CustomerListQuery[]))
-    }, [])
+    }, [customerFilter])
+
+    const onFilter = (filter: CustomerFilter) => {
+        setCustomerFilter(filter)
+    }
 
     return <>
         <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4}}>
             Customers
         </Typography>
+
+        <CustomersFilterComp onFilter={onFilter}></CustomersFilterComp>
 
         <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
             <Table sx={{ minWidth: 650 }} aria-label="customers table" stickyHeader>
