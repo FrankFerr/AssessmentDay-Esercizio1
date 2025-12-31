@@ -1,7 +1,9 @@
-import { Paper, Table, TableContainer, TableHead, TableRow, Typography, styled, TableCell, tableCellClasses, TableBody } from "@mui/material"
+import { Paper, Table, TableContainer, TableHead, TableRow, Typography, styled, TableCell, tableCellClasses, TableBody, Box } from "@mui/material"
 import { useEffect, useState } from "react"
 import CustomersFilterComp from "../components/CustomersFilterComp/CustomersFilterComp";
 import { CustomerFilter } from "../components/CustomersFilterComp/CustomerFilter";
+import ExportXmlComp from "../components/ExportXmlComp/ExportXmlComp";
+import { ElementCompact } from "xml-js";
 
 interface CustomerListQuery{
     id: number,
@@ -37,12 +39,32 @@ export default function CustomerListPage() {
         setCustomerFilter(filter)
     }
 
+    const onExportXml = () => {
+        const xmlData: ElementCompact = {
+            _declaration: { _attributes: { version: '1.0', encoding: 'utf-8' } },
+            customers: {
+                customer: customerList.map((customer) => ({
+                    name: { _text: customer.name },
+                    address: { _text: customer.address },
+                    email: { _text: customer.email },
+                    phone: { _text: customer.phone },
+                    iban: { _text: customer.iban }
+                }))
+            }
+        }
+
+        return xmlData
+    }
+
     return <>
         <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4}}>
             Customers
         </Typography>
 
-        <CustomersFilterComp onFilter={onFilter}></CustomersFilterComp>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: "1rem" }}>
+            <CustomersFilterComp onFilter={onFilter}></CustomersFilterComp>
+            <ExportXmlComp getXmlData={onExportXml} filename="customers.xml"></ExportXmlComp>
+        </Box>
 
         <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
             <Table sx={{ minWidth: 650 }} aria-label="customers table" stickyHeader>

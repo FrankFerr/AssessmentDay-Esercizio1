@@ -23,7 +23,7 @@ export default function CustomersFilterComp({ onFilter }: ICustomerFilterProps){
     }
 
     return (
-        <Box sx={{ display: 'flex', gap: '1rem', mb: 2 }}>
+        <Box sx={{ display: 'flex', gap: '1rem' }}>
             <TextField 
                 name="name" 
                 onChange={handleInputChange} 
