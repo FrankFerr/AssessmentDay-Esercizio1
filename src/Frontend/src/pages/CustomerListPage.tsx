@@ -25,6 +25,7 @@ const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
 export default function CustomerListPage() {
     const [customerList, setCustomerList] = useState<CustomerListQuery[]>([])
     const [customerFilter, setCustomerFilter] = useState<CustomerFilter>(new CustomerFilter("", ""))
+    const [isLoading, setLoadingState] = useState<boolean>(true)
 
     useEffect(() => {
         let url = "/api/customers/list"
@@ -33,6 +34,7 @@ export default function CustomerListPage() {
         fetch(url)
         .then((response) => response.json())
         .then((data) => setCustomerList(data as CustomerListQuery[]))
+        .finally(() => setLoadingState(false))
     }, [customerFilter])
 
     const onFilter = (filter: CustomerFilter) => {
@@ -66,29 +68,33 @@ export default function CustomerListPage() {
             <ExportXmlComp getXmlData={onExportXml} filename="customers.xml"></ExportXmlComp>
         </Box>
 
-        <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
-            <Table sx={{ minWidth: 650 }} aria-label="customers table" stickyHeader>
-                <TableHead>
-                    <TableRow>
-                        <StyledTableHeadCell>Name</StyledTableHeadCell>
-                        <StyledTableHeadCell>Address</StyledTableHeadCell>
-                        <StyledTableHeadCell>Email</StyledTableHeadCell>
-                        <StyledTableHeadCell>Phone</StyledTableHeadCell>
-                        <StyledTableHeadCell>Iban</StyledTableHeadCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {customerList.map((customer) => 
-                        <TableRow key={customer.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                            <TableCell>{customer.name}</TableCell>
-                            <TableCell>{customer.address}</TableCell>
-                            <TableCell>{customer.email}</TableCell>
-                            <TableCell>{customer.phone}</TableCell>
-                            <TableCell>{customer.iban}</TableCell>
+        {
+            isLoading ?
+            <Typography variant="h3" sx={{ textAlign: "center", mt: 8}}>Loading data...</Typography> :
+            <TableContainer component={Paper} sx={{ maxHeight: '70vh' }}>
+                <Table sx={{ minWidth: 650 }} aria-label="customers table" stickyHeader>
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableHeadCell>Name</StyledTableHeadCell>
+                            <StyledTableHeadCell>Address</StyledTableHeadCell>
+                            <StyledTableHeadCell>Email</StyledTableHeadCell>
+                            <StyledTableHeadCell>Phone</StyledTableHeadCell>
+                            <StyledTableHeadCell>Iban</StyledTableHeadCell>
                         </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {customerList.map((customer) => 
+                            <TableRow key={customer.id} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                                <TableCell>{customer.name}</TableCell>
+                                <TableCell>{customer.address}</TableCell>
+                                <TableCell>{customer.email}</TableCell>
+                                <TableCell>{customer.phone}</TableCell>
+                                <TableCell>{customer.iban}</TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        }
     </>
 }
