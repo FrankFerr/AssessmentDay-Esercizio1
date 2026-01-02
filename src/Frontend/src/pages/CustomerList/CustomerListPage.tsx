@@ -1,19 +1,11 @@
 import { Paper, Table, TableContainer, TableHead, TableRow, Typography, TableCell, TableBody, Box } from "@mui/material"
 import { useEffect, useState } from "react"
-import CustomersFilterComp from "../components/CustomersFilterComp/CustomersFilterComp";
-import { CustomerFilter } from "../components/CustomersFilterComp/CustomerFilter";
-import ExportXmlComp from "../components/ExportXmlComp/ExportXmlComp";
+import CustomersFilterComp from "../../components/CustomersFilterComp/CustomersFilterComp";
+import { CustomerFilter } from "../../components/CustomersFilterComp/CustomerFilter";
+import ExportXmlComp from "../../components/ExportXmlComp/ExportXmlComp";
 import { ElementCompact } from "xml-js";
-import { StyledTableHeadCell } from '../utility/StyledComponents'
-
-interface CustomerListQuery{
-    id: number,
-    name: string,
-    address: string,
-    email: string,
-    phone: string,
-    iban: string
-}
+import { StyledTableHeadCell } from '../../utility/StyledComponents'
+import type { CustomerListQuery } from "./CustomersListQuery";
 
 export default function CustomerListPage() {
     const [customerList, setCustomerList] = useState<CustomerListQuery[]>([])
@@ -26,10 +18,10 @@ export default function CustomerListPage() {
 
         fetch(url)
         .then((response) => response.json())
-        .then((data) => setCustomerList(data as CustomerListQuery[]))
+        .then((data) => setCustomerList(data))
         .finally(() => setLoadingState(false))
     }, [customerFilter])
-
+    
     const onFilter = (filter: CustomerFilter) => {
         setCustomerFilter(filter)
     }
@@ -43,7 +35,11 @@ export default function CustomerListPage() {
                     address: { _text: customer.address },
                     email: { _text: customer.email },
                     phone: { _text: customer.phone },
-                    iban: { _text: customer.iban }
+                    iban: { _text: customer.iban },
+                    category: {
+                        code: { _text: customer.category?.code ?? "" },
+                        description: { _text: customer.category?.description ?? "" }
+                    }
                 }))
             }
         }
@@ -73,6 +69,8 @@ export default function CustomerListPage() {
                             <StyledTableHeadCell>Email</StyledTableHeadCell>
                             <StyledTableHeadCell>Phone</StyledTableHeadCell>
                             <StyledTableHeadCell>Iban</StyledTableHeadCell>
+                            <StyledTableHeadCell>Category Code</StyledTableHeadCell>
+                            <StyledTableHeadCell>Category Desc.</StyledTableHeadCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -83,6 +81,8 @@ export default function CustomerListPage() {
                                 <TableCell>{customer.email}</TableCell>
                                 <TableCell>{customer.phone}</TableCell>
                                 <TableCell>{customer.iban}</TableCell>
+                                <TableCell>{customer.category?.code}</TableCell>
+                                <TableCell>{customer.category?.description}</TableCell>
                             </TableRow>
                         )}
                     </TableBody>
