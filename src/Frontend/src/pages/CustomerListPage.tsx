@@ -1,9 +1,10 @@
-import { Paper, Table, TableContainer, TableHead, TableRow, Typography, styled, TableCell, tableCellClasses, TableBody, Box } from "@mui/material"
+import { Paper, Table, TableContainer, TableHead, TableRow, Typography, TableCell, TableBody, Box } from "@mui/material"
 import { useEffect, useState } from "react"
 import CustomersFilterComp from "../components/CustomersFilterComp/CustomersFilterComp";
 import { CustomerFilter } from "../components/CustomersFilterComp/CustomerFilter";
 import ExportXmlComp from "../components/ExportXmlComp/ExportXmlComp";
 import { ElementCompact } from "xml-js";
+import { StyledTableHeadCell } from '../utility/StyledComponents'
 
 interface CustomerListQuery{
     id: number,
@@ -13,14 +14,6 @@ interface CustomerListQuery{
     phone: string,
     iban: string
 }
-
-const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-}));
-
 
 export default function CustomerListPage() {
     const [customerList, setCustomerList] = useState<CustomerListQuery[]>([])
